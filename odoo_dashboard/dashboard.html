@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - INVERO</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;900&display=swap" rel="stylesheet">
+
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f9; /* Light grey-blue background */
+            color: #333;
+            padding-top: 80px; /* Space for fixed navbar */
+            min-height: 100vh;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+       
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 65px;
+            background: #ffffff;
+            border-bottom: 3px solid #0066ff; /* INVERO Blue Line */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        /* Logo */
+        .brand-logo {
+            font-size: 22px;
+            margin-right: 50px;
+            display: flex;
+            align-items: baseline;
+        }
+        .brand-logo .text-blue { color: #0066ff; font-weight: 900; letter-spacing: -0.5px; }
+        .brand-logo .text-gray { color: #555555; font-weight: 400; margin-left: 2px; }
+
+        /* Nav Links Container */
+        .nav-links { display: flex; align-items: center; gap: 10px; }
+
+        /* Individual Link Items */
+        .nav-item {
+            color: #666;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 22px 15px; /* Height matches navbar for hover effect */
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+        .nav-item:hover, .nav-item.active { color: #0066ff; }
+
+        /* === DROPDOWN STYLES === */
+        .dropdown { position: relative; }
+        
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%; /* Directly below the link */
+            left: 0;
+            background-color: #ffffff;
+            min-width: 160px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+            border-radius: 0 0 6px 6px;
+            z-index: 2000;
+        }
+
+        .dropdown:hover .dropdown-menu { display: block; }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 20px;
+            font-size: 14px;
+            color: #555;
+            border-bottom: 1px solid #f9f9f9;
+        }
+        .dropdown-menu a:hover {
+            background-color: #f0f7ff;
+            color: #0066ff;
+        }
+        .dropdown-menu a:last-child { border-bottom: none; }
+        
+        /* Arrow Icon */
+        .fa-caret-down { margin-left: 5px; font-size: 11px; }
+
+        /* Profile Icon */
+        .user-profile {
+            width: 36px; height: 36px;
+            background-color: #6c757d;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 18px;
+        }
+
+      
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: flex-end;
+        }
+
+        .filter-group { display: flex; flex-direction: column; min-width: 150px; flex: 1; }
+        .filter-group label { font-size: 12px; color: #777; margin-bottom: 5px; font-weight: 600; }
+        .filter-group select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .kpi-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #eef2f5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 160px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Interactive cards hover effect */
+        a.kpi-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-color: #0066ff;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #777;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Big Numbers */
+        .kpi-number {
+            font-size: 36px;
+            font-weight: 800;
+            color: #222;
+        }
+
+        /* Colors for numbers */
+        .kpi-number.pending { color: #0066ff; } /* Blue */
+        .kpi-number.critical { color: #dc3545; } /* Red */
+
+        .kpi-label {
+            font-size: 13px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* Specific Layout for Delivery/Operations Cards */
+        .card-kpi-row {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .card-stats {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-size: 13px;
+        }
+        
+        .stat-late { color: #dc3545; font-weight: 600; }
+        .stat-total { color: #666; }
+
+        /* Side border accents */
+        .kpi-card::before {
+            content: "";
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            background: #ccc;
+        }
+
+        .kpi-card:nth-child(1)::before { background: #6c757d; } /* Grey */
+        .kpi-card:nth-child(2)::before { background: #0066ff; } /* Blue */
+        .kpi-card:nth-child(3)::before { background: #28a745; } /* Green */
+        .kpi-card:nth-child(4)::before { background: #dc3545; } /* Red */
+        
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-links">
+            <div class="brand-logo">
+                <span class="text-blue">INVERO</span><span class="text-gray"></span>
+            </div>
+
+            <a href="/dashboard" class="nav-item active">Dashboard</a>
+            <a href="/operations" class="nav-item">Operations</a>
+            <a href="products.html" class="nav-item">Stock</a>
+            <a href="move.html" class="nav-item">Move History</a>
+            
+
+            <div class="dropdown">
+                <div class="nav-item">
+                    Settings <i class="fas fa-caret-down"></i>
+                </div>
+                <div class="dropdown-menu">
+                    <a href="warehouse.html">1. Warehouse</a>
+                    <a href="location.html">2. Location</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="user-profile">
+            <i class="fas fa-user"></i>
+        </div>
+    </nav>
+    <div class="dashboard-container">
+        
+        <h2 class="page-title">Real-Time Stock Metrics</h2>
+
+        <div class="filter-section">
+            <div class="filter-group">
+                <label>Document Type</label>
+                <select><option>All Types</option><option>Receipts</option><option>Delivery</option></select>
+            </div>
+            <div class="filter-group">
+                <label>Status</label>
+                <select><option>All Status</option><option>Ready</option><option>Waiting</option></select>
+            </div>
+            <div class="filter-group">
+                <label>Warehouse</label>
+                <select><option>Main Warehouse</option><option>Overflow</option></select>
+            </div>
+            <div class="filter-group">
+                <label>Category</label>
+                <select><option>All Categories</option><option>Electronics</option><option>Furniture</option></select>
+            </div>
+        </div>
+
+        <div class="kpi-grid">
+            
+            <div class="kpi-card">
+                <div class="card-title">Total Products</div>
+                <span class="kpi-number">540</span>
+                <span class="kpi-label">Units in Main Warehouse</span>
+            </div>
+
+            <a href="/receipts" class="kpi-card">
+                <div class="card-title">Receipts</div>
+                <div class="card-kpi-row">
+                    <span class="kpi-number pending">4</span>
+                    <span class="kpi-label">To Process</span>
+                </div>
+                <div class="card-stats">
+                    <span class="stat-late">0 Late</span>
+                    <span class="stat-total">12 Orders Total</span>
+                </div>
+            </a>
+            
+            <a href="/deliveries" class="kpi-card">
+                <div class="card-title">Delivery Orders</div>
+                <div class="card-kpi-row">
+                    <span class="kpi-number" style="color:#28a745">7</span>
+                    <span class="kpi-label">Ready to Ship</span>
+                </div>
+                <div class="card-stats">
+                    <span class="stat-late">1 Late</span>
+                    <span class="stat-total">6 Operations Total</span>
+                </div>
+            </a>
+
+            <div class="kpi-card">
+                <div class="card-title">Low Stock Alerts</div>
+                <span class="kpi-number critical">12</span>
+                <span class="kpi-label">Items below reorder point</span>
+            </div>
+            
+            <a href="/internal" class="kpi-card">
+                <div class="card-title">Internal Transfers</div>
+                <span class="kpi-number">2</span>
+                <span class="kpi-label">Scheduled for today</span>
+            </a>
+            
+            <div class="kpi-card">
+                <div class="card-title">Stock Adjustments</div>
+                <span class="kpi-number">5</span>
+                <span class="kpi-label">Mismatches this week</span>
+            </div>
+
+        </div>
+    </div>
+    </body>
+</html>

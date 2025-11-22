@@ -1,0 +1,193 @@
+/* Color Variables */
+:root {
+    --primary-blue: #007bff;
+    --primary-hover: #0056b3;
+    --background-light: #f4f7fa;
+    --text-dark: #333;
+    --text-medium: #6c757d;
+    --warning-red: #dc3545;
+}
+
+/* General Setup */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: var(--background-light);
+    margin: 0;
+    padding: 0;
+}
+
+/* 1. NAVIGATION BAR STYLING */
+.navbar-container {
+    background-color: white;
+    border-bottom: 3px solid var(--primary-blue);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.navbar {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Distribute space between sections */
+}
+
+.nav-brand {
+    color: var(--primary-blue);
+    font-size: 28px;
+    font-weight: 900;
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-item {
+    color: var(--text-medium);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 5px 0;
+    transition: color 0.2s, border-bottom 0.2s;
+}
+
+.nav-item:hover, .nav-item.active {
+    color: var(--primary-blue);
+    border-bottom: 2px solid var(--primary-blue);
+}
+
+/* User Profile Icon */
+.user-profile a {
+    color: var(--text-medium);
+    text-decoration: none;
+}
+
+.profile-icon {
+    font-size: 32px;
+    margin-left: 20px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.profile-icon:hover {
+    color: var(--primary-blue);
+}
+
+
+/* 2. MAIN DASHBOARD CONTENT STYLING */
+.dashboard-container {
+    max-width: 1400px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.page-title {
+    color: var(--text-dark);
+    font-size: 28px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+/* 3. DYNAMIC FILTERS STYLING */
+.filter-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+
+.filter-title {
+    color: var(--primary-blue);
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.filter-groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+}
+
+.filter-group label {
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.filter-group select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+}
+
+/* 4. KPI GRID (Multiple Columns) */
+.kpi-grid {
+    display: grid;
+    /* Create a grid with columns that automatically fit up to 6 columns wide */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    gap: 20px;
+}
+
+/* 5. KPI CARD STYLING */
+.kpi-card {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 5px solid var(--primary-blue); /* Blue accent on the left */
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.link-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.card-title {
+    font-size: 14px;
+    color: var(--text-medium);
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.kpi-number {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+.kpi-number.pending {
+    color: var(--primary-blue); /* Blue for active operations */
+}
+
+.kpi-number.critical {
+    color: var(--primary-blue); /* Red for critical issues */
+}
+
+.kpi-label {
+    font-size: 12px;
+    color: #999;
+}
+
+/* Warning Card Specific Style (Low Stock) */
+.warning-card {
+    border-left-color: var(--primary-blue); /* Red accent for warnings */
+}

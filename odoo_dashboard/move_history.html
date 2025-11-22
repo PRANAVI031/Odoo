@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Move History</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f9fafb;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 24px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-links span {
+            color: #6b7280;
+            cursor: pointer;
+        }
+
+        .nav-links span.active {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #fee2e2;
+            color: #dc2626;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .main-content {
+            padding: 24px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+
+        .toolbar {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            background-color: #f3f4f6;
+            color: #374151;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 8px 16px 8px 40px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            width: 200px;
+        }
+
+        .search-box input:focus {
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 10px;
+            color: #9ca3af;
+        }
+
+        .view-btn {
+            padding: 8px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 4px;
+            color: #6b7280;
+        }
+
+        .view-btn:hover {
+            background-color: #f3f4f6;
+        }
+
+        .view-btn.active {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            padding: 12px 24px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 500;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        tbody tr.in-move {
+            background-color: #f0fdf4;
+        }
+
+        tbody tr.out-move {
+            background-color: #fef2f2;
+        }
+
+        td {
+            padding: 16px 24px;
+            font-size: 14px;
+        }
+
+        td.text-primary {
+            color: #111827;
+        }
+
+        td.text-secondary {
+            color: #6b7280;
+        }
+
+        td.text-bold {
+            font-weight: 500;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #dc2626;
+            background-color: #fee2e2;
+            border-radius: 4px;
+        }
+
+        .legend {
+            padding: 16px 24px;
+            background-color: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .legend-title {
+            font-weight: 500;
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .legend ul {
+            margin-left: 24px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .legend li {
+            margin-bottom: 4px;
+        }
+
+        .text-green {
+            color: #15803d;
+            font-weight: 500;
+        }
+
+        .text-red {
+            color: #b91c1c;
+            font-weight: 500;
+        }
+
+        .kanban-view {
+            padding: 24px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .kanban-column {
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .kanban-title {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 16px;
+        }
+
+        .kanban-card {
+            background-color: white;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            margin-bottom: 12px;
+        }
+
+        .kanban-card-title {
+            font-weight: 500;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .kanban-card-info {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .kanban-card-info div {
+            margin-bottom: 4px;
+        }
+
+        .kanban-moves {
+            margin-top: 8px;
+            font-weight: 500;
+            color: #1f2937;
+        }
+
+        .kanban-move {
+            padding: 4px 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 32px;
+            font-size: 14px;
+            color: #9ca3af;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="nav-links">
+                <span>Dashboard</span>
+                <span>Operations</span>
+                <span>Products</span>
+                <span class="active">Move History</span>
+                <span>Settings</span>
+            </div>
+            <div class="user-avatar">A</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="card">
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <span class="badge">NEW</span>
+                    <h1 class="title">Move History</h1>
+                </div>
+                
+                <div class="toolbar-right">
+                    <!-- Search -->
+                    <div class="search-box">
+                        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search...">
+                    </div>
+
+                    <!-- View Toggle -->
+                    <button class="view-btn active" id="listViewBtn">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <button class="view-btn" id="kanbanViewBtn">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table View -->
+            <div id="tableView">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Reference</th>
+                                <th>Date</th>
+                                <th>Contact</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr class="in-move">
+                                <td class="text-primary">WH/IN/0001</td>
+                                <td class="text-secondary">12/7/2001</td>
+                                <td class="text-secondary">Azure Interior</td>
+                                <td class="text-primary text-bold">vendor</td>
+                                <td class="text-primary text-bold">WH/Stock1</td>
+                                <td class="text-secondary">150</td>
+                                <td><span class="status-badge">Ready</span></td>
+                            </tr>
+                            <tr class="out-move">
+                                <td class="text-primary">WH/OUT/0002</td>
+                                <td class="text-secondary">12/7/2001</td>
+                                <td class="text-secondary">Azure Interior</td>
+                                <td class="text-primary text-bold">WH/Stock1</td>
+                                <td class="text-primary text-bold">vendor</td>
+                                <td class="text-secondary">50</td>
+                                <td><span class="status-badge">Ready</span></td>
+                            </tr>
+                            <tr class="out-move">
+                                <td class="text-primary">WH/OUT/0002</td>
+                                <td class="text-secondary">12/7/2001</td>
+                                <td class="text-secondary">Azure Interior</td>
+                                <td class="text-primary text-bold">WH/Stock2</td>
+                                <td class="text-primary text-bold">vendor</td>
+                                <td class="text-secondary">25</td>
+                                <td><span class="status-badge">Ready</span></td>
+                            </tr>
+                            <tr class="in-move">
+                                <td class="text-primary">WH/INT/0003</td>
+                                <td class="text-secondary">12/8/2001</td>
+                                <td class="text-secondary">Internal Transfer</td>
+                                <td class="text-primary text-bold">Main Warehouse</td>
+                                <td class="text-primary text-bold">Production Floor</td>
+                                <td class="text-secondary">200</td>
+                                <td><span class="status-badge">Ready</span></td>
+                            </tr>
+                            <tr class="in-move">
+                                <td class="text-primary">WH/INT/0004</td>
+                                <td class="text-secondary">12/8/2001</td>
+                                <td class="text-secondary">Internal Transfer</td>
+                                <td class="text-primary text-bold">Rack A</td>
+                                <td class="text-primary text-bold">Rack B</td>
+                                <td class="text-secondary">75</td>
+                                <td><span class="status-badge">Ready</span></td>
+                            </tr>
+                            <tr class="in-move">
+                                <td class="text-primary">WH/INT/0005</td>
+                                <td class="text-secondary">12/9/2001</td>
+                                <td class="text-secondary">Internal Transfer</td>
+                                <td class="text-primary text-bold">Warehouse 1</td>
+                                <td class="text-primary text-bold">Warehouse 2</td>
+                                <td class="text-secondary">300</td>
+                                <td><span class="status-badge">Ready</span></td>
+                            </tr>
+                            <tr class="out-move">
+                                <td class="text-primary">WH/OUT/0006</td>
+                                <td class="text-secondary">12/9/2001</td>
+                                <td class="text-secondary">Beta Corp</td>
+                                <td class="text-primary text-bold">WH/Stock1</td>
+                                <td class="text-primary text-bold">Customer</td>
+                                <td class="text-secondary">100</td>
+                                <td><span class="status-badge">Ready</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Legend -->
+                <div class="legend">
+                    <p class="legend-title">Move History Rules:</p>
+                    <ul>
+                        <li>Populate all moves done between the from - to location in inventory</li>
+                        <li>If single reference has multiple products, display it in multiple rows</li>
+                        <li><span class="text-green">In events should be displayed in green</span></li>
+                        <li><span class="text-red">Out moves should be displayed in red</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Kanban View -->
+            <div id="kanbanView" class="hidden">
+                <div class="kanban-view">
+                    <!-- Ready Column -->
+                    <div class="kanban-column">
+                        <h3 class="kanban-title">Ready</h3>
+                        
+                        <div class="kanban-card">
+                            <div class="kanban-card-title">WH/IN/0001</div>
+                            <div class="kanban-card-info">
+                                <div>Date: 12/7/2001</div>
+                                <div>Contact: Azure Interior</div>
+                                <div class="kanban-moves">
+                                    <div class="kanban-move text-green">vendor → WH/Stock1 (150)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card">
+                            <div class="kanban-card-title">WH/OUT/0002</div>
+                            <div class="kanban-card-info">
+                                <div>Date: 12/7/2001</div>
+                                <div>Contact: Azure Interior</div>
+                                <div class="kanban-moves">
+                                    <div class="kanban-move text-red">WH/Stock1 → vendor (50)</div>
+                                    <div class="kanban-move text-red">WH/Stock2 → vendor (25)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card">
+                            <div class="kanban-card-title">WH/INT/0003</div>
+                            <div class="kanban-card-info">
+                                <div>Date: 12/8/2001</div>
+                                <div>Contact: Internal Transfer</div>
+                                <div class="kanban-moves">
+                                    <div class="kanban-move text-green">Main Warehouse → Production Floor (200)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card">
+                            <div class="kanban-card-title">WH/INT/0004</div>
+                            <div class="kanban-card-info">
+                                <div>Date: 12/8/2001</div>
+                                <div>Contact: Internal Transfer</div>
+                                <div class="kanban-moves">
+                                    <div class="kanban-move text-green">Rack A → Rack B (75)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card">
+                            <div class="kanban-card-title">WH/INT/0005</div>
+                            <div class="kanban-card-info">
+                                <div>Date: 12/9/2001</div>
+                                <div>Contact: Internal Transfer</div>
+                                <div class="kanban-moves">
+                                    <div class="kanban-move text-green">Warehouse 1 → Warehouse 2 (300)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card">
+                            <div class="kanban-card-title">WH/OUT/0006</div>
+                            <div class="kanban-card-info">
+                                <div>Date: 12/9/2001</div>
+                                <div>Contact: Beta Corp</div>
+                                <div class="kanban-moves">
+                                    <div class="kanban-move text-red">WH/Stock1 → Customer (100)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- In Progress Column -->
+                    <div class="kanban-column">
+                        <h3 class="kanban-title">In Progress</h3>
+                        <div class="empty-state">No moves in progress</div>
+                    </div>
+
+                    <!-- Completed Column -->
+                    <div class="kanban-column">
+                        <h3 class="kanban-title">Completed</h3>
+                        <div class="empty-state">No completed moves</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // View Toggle
+        const listViewBtn = document.getElementById('listViewBtn');
+        const kanbanViewBtn = document.getElementById('kanbanViewBtn');
+        const tableView = document.getElementById('tableView');
+        const kanbanView = document.getElementById('kanbanView');
+
+        listViewBtn.addEventListener('click', () => {
+            listViewBtn.classList.add('active');
+            kanbanViewBtn.classList.remove('active');
+            tableView.classList.remove('hidden');
+            kanbanView.classList.add('hidden');
+        });
+
+        kanbanViewBtn.addEventListener('click', () => {
+            kanbanViewBtn.classList.add('active');
+            listViewBtn.classList.remove('active');
+            kanbanView.classList.remove('hidden');
+            tableView.classList.add('hidden');
+        });
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const tableBody = document.getElementById('tableBody');
+        const allRows = Array.from(tableBody.querySelectorAll('tr'));
+
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            allRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

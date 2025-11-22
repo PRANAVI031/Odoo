@@ -1,0 +1,157 @@
+/* ===========================
+   GENERAL PAGE STYLING
+=========================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", Arial, sans-serif;
+}
+
+body {
+    background: #f4f7f9; /* Slightly blueish-gray background */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding-top: 100px; /* Space for the navbar */
+}
+
+/* ===========================
+   NAVBAR (Based on Image)
+=========================== */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    padding: 0 40px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    border-bottom: 3px solid #007bff; /* The thick blue line */
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 800;
+    color: #007bff; /* INVERO Blue */
+    margin-right: 40px;
+}
+
+.logo span {
+    color: #555;
+    font-weight: 400;
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+    flex-grow: 1;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #666;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.nav-links a.active {
+    color: #007bff; /* Active "Stock" link color */
+    font-weight: 600;
+}
+
+.user-icon {
+    width: 35px;
+    height: 35px;
+    background-color: #777;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+/* ===========================
+   FORM CARD
+=========================== */
+.card {
+    width: 450px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    /* Matches the light red/pink border in image */
+    border: 1px solid #ffb4b4; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-left: auto; /* Moves card to right if used in a flex container */
+    margin-right: 10%; /* Approximate spacing from right edge */
+}
+
+/* ===========================
+   HEADINGS
+=========================== */
+h2 {
+    font-size: 24px;
+    color: #d64545; /* Red title */
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* ===========================
+   FORM FIELDS
+=========================== */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #555;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    /* FIXED: Image shows solid light gray, not dashed red */
+    border: 1px solid #e0e0e0; 
+    font-size: 14px;
+    outline: none;
+    background: #fff;
+    transition: border-color 0.2s;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #007bff;
+}
+
+textarea {
+    height: 80px;
+    resize: none;
+}
+
+/* ===========================
+   BUTTON
+=========================== */
+button {
+    width: 100%;
+    padding: 12px;
+    /* FIXED: Image shows Blue button, not Red */
+    background: #007bff; 
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #0069d9;
+}
