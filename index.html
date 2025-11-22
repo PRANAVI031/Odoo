@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Receipts — Inventory</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="top-nav">
+    <div class="top-left">
+      <h1>Inventory Operations</h1>
+      <nav class="nav-links">
+        <a href="#" data-view="list" class="nav-link active">Dashboard</a>
+        <a href="#" data-view="list" class="nav-link">Operations</a>
+        <a href="#" data-view="list" class="nav-link">Products</a>
+        <a href="#" data-view="list" class="nav-link">Move History</a>
+        <a href="#" data-view="list" class="nav-link">Settings</a>
+      </nav>
+    </div>
+
+    <div class="top-actions">
+      <button id="btnNew" class="btn primary">+ New</button>
+      <div class="view-switch">
+        <button id="btnList" class="btn">List</button>
+        <button id="btnKanban" class="btn">Kanban</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- LIST VIEW -->
+    <section id="view-list" class="view">
+      <div class="view-header">
+        <h2>Receipts</h2>
+        <div class="search-area">
+          <input id="searchInput" type="search" placeholder="Search by reference / contact / location" />
+        </div>
+      </div>
+
+      <div class="list-area">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Reference</th>
+              <th>From</th>
+              <th>To</th>
+              <th>Contact</th>
+              <th>Schedule</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="receiptTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- KANBAN VIEW -->
+    <section id="view-kanban" class="view hidden">
+      <div class="kanban">
+        <div class="kanban-column">
+          <h3>Draft</h3>
+          <div id="colDraft" class="kanban-list"></div>
+        </div>
+        <div class="kanban-column">
+          <h3>Ready</h3>
+          <div id="colReady" class="kanban-list"></div>
+        </div>
+        <div class="kanban-column">
+          <h3>Done</h3>
+          <div id="colDone" class="kanban-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FULL-PAGE RECEIPT FORM VIEW -->
+    <section id="view-form" class="view hidden">
+      <div class="form-header">
+        <div>
+          <button id="btnBack" class="btn">← Back</button>
+          <h2 id="formTitle">Receipt</h2>
+        </div>
+        <div class="form-actions">
+          <button id="btnValidate" class="btn">Validate</button>
+          <button id="btnPrint" class="btn" disabled>Print</button>
+          <button id="btnCancel" class="btn">Cancel</button>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="form-grid">
+          <div class="form-col">
+            <label>Reference</label>
+            <input id="inputRef" type="text" disabled />
+
+            <label>Receive From</label>
+            <input id="inputFrom" type="text" placeholder="Vendor / Supplier" />
+
+            <label>Responsible</label>
+            <input id="inputResponsible" type="text" />
+
+          </div>
+          <div class="form-col">
+            <label>Schedule Date</label>
+            <input id="inputDate" type="date" />
+
+            <label>Contact</label>
+            <input id="inputContact" type="text" placeholder="Customer / Contact" />
+
+            <label>Status</label>
+            <div id="statusRibbon" class="status-ribbon">
+              <span class="status-dot draft">Draft</span>
+              <span class="status-dot ready">Ready</span>
+              <span class="status-dot done">Done</span>
+            </div>
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="products-header">
+          <h3>Products</h3>
+          <button id="btnAddProduct" class="btn small">+ Add product</button>
+        </div>
+
+        <div class="products-table" id="productsTable">
+          <!-- dynamic rows -->
+        </div>
+
+        <div class="form-footer">
+          <button id="btnSaveDraft" class="btn primary">Save Draft</button>
+        </div>
+      </div>
+
+      <!-- example/illustration (uses your uploaded image path) -->
+      <div class="sketch-illustration">
+        <img src="/mnt/data/0350353b-f59f-42f0-9558-ca4a5ab983c1.png" alt="sketch" />
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
