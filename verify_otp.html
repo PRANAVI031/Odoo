@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify OTP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrapper">
+    <div class="form-container">
+        <h2>Verify OTP</h2>
+        <div class="input-group">
+            <label>Enter OTP</label>
+            <input id="otp" type="text" placeholder="6-digit OTP">
+        </div>
+        <button class="btn" onclick="verifyOTP()">Verify OTP</button>
+        <p class="redirect"><a href="forgot_password.html">Back</a></p>
+    </div>
+</div>
+
+<script>
+function verifyOTP() {
+    const otp = document.getElementById("otp").value;
+    const email = localStorage.getItem("reset_email");
+
+    fetch("http://127.0.0.1:5000/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        if (data.message === "OTP verified") {
+            window.location.href = "reset_password.html";
+        }
+    })
+    .catch(() => alert("Server error"));
+}
+</script>
+</body>
+</html>
